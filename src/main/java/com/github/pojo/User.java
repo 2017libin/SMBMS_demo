@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author libin
+ * @Author chase
  * @Date 2023/10/22
  */
 @Data  // 通过Data注解来自动生成属性的getter/setter、toString方法
