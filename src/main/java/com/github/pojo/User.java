@@ -20,7 +20,7 @@ public class User {
     private String address;
     private Integer userRole;
     private Integer createdBy;
-    private Date createdDate;
+    private Date creationDate;
     private Integer modifyBy;
     private Date modifyDate;
     private Integer age;
