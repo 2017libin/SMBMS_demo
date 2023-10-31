@@ -5,6 +5,8 @@ import java.io.IOException;
 
 // 设置请求和响应的字符编码
 public class CharacterEncodingFilter implements Filter {
+
+    // init方法在web应用启动时调用，并且只会调用一次
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
