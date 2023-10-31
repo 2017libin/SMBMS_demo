@@ -1,5 +1,5 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@include file="/jsp/common/head.jsp"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ include file="/jsp/common/head.jsp"%>
 <div class="right">
   <img class="wColck" src="${pageContext.request.contextPath }/images/clock.jpg" alt=""/>
   <div class="wFont">
@@ -8,4 +8,4 @@
   </div>
 </div>
 </section>
-<%@include file="/jsp/common/foot.jsp" %>
+<%@ include file="/jsp/common/foot.jsp" %>
