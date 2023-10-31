@@ -9,4 +9,27 @@
   <welcome-file-list>
     <welcome-file>login.jsp</welcome-file>
   </welcome-file-list>
+
+  <!--   servlet  -->
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.github.servlet.user.LoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login.do</url-pattern>
+  </servlet-mapping>
+
+  <!--  字符编码过滤器  -->
+  <filter>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <filter-class>com.github.filter.CharacterEncodingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <!--只要是 /servlet的任何请求，会经过这个过滤器-->
+    <url-pattern>/servlet/*</url-pattern>
+    <!--<url-pattern>/*</url-pattern>-->
+  </filter-mapping>
+
 </web-app>
