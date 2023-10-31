@@ -11,6 +11,7 @@
   </welcome-file-list>
 
   <!--   servlet  -->
+<!--  验证登录 -->
   <servlet>
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>com.github.servlet.user.LoginServlet</servlet-class>
@@ -19,7 +20,16 @@
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login.do</url-pattern>
   </servlet-mapping>
-
+  
+<!--  登出-->
+  <servlet>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>com.github.servlet.user.LogoutServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/jsp/logout.do</url-pattern>
+  </servlet-mapping>
   <!--  字符编码过滤器  -->
   <filter>
     <filter-name>CharacterEncodingFilter</filter-name>
