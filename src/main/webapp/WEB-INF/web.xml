@@ -60,4 +60,9 @@
     <filter-name>SysFilter</filter-name>
     <url-pattern>/jsp/*</url-pattern>
   </filter-mapping>
+
+<!--  设置session过期时间-->
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
 </web-app>
