@@ -6,6 +6,7 @@ import com.github.pojo.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * @Author libin
@@ -39,5 +40,20 @@ public class UserDaoImpl implements UserDao {
             BaseDao.closeResult(null, preparedStatement, resultSet);
         }
         return user;
+    }
+
+    // 修改当前用户密码
+    public int updatePwd(Connection connection, int id, String pwd) throws SQLException {
+        System.out.println("UserServlet1:"+pwd);
+
+        PreparedStatement pstm = null;
+        int flag = 0;
+        if(connection != null){
+            String sql = "update smbms_user set userPassword= ? where id = ?";
+            Object[] params = {pwd,id};
+            flag = BaseDao.execute(connection, pstm, sql, params);
+            BaseDao.closeResult(null, pstm, null);
+        }
+        return flag;
     }
 }

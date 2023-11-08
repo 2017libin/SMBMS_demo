@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ include file="/jsp/common/head.jsp"%>
+<section>
 <div class="right">
   <img class="wColck" src="${pageContext.request.contextPath }/images/clock.jpg" alt=""/>
   <div class="wFont">

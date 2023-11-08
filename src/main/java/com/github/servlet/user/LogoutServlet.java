@@ -15,7 +15,7 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 移除session中的属性
 //        request.getSession().removeAttribute(Constants.USER_SESSION);
-        // 删除session
+        // 删除session，下次使用该JSESSIONID访问时会新建一个session而不是报错
         request.getSession().invalidate();
         response.sendRedirect(request.getContextPath()+"/login.jsp");
     }

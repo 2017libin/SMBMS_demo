@@ -65,11 +65,18 @@
       <version>1.1.2</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.47</version>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.76</version>
     </dependency>
+<!--过时组件，导入会抛出异常-->
+<!--    <dependency>-->
+<!--      <groupId>mysql</groupId>-->
+<!--      <artifactId>mysql-connector-java</artifactId>-->
+<!--      <version>5.1.47</version>-->
+<!--    </dependency>-->
   </dependencies>
 
   <build>

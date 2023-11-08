@@ -43,8 +43,26 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
+    public boolean updatePwd(int id, String pwd) {
+        System.out.println("UserServlet2:" + pwd);
+
+        boolean flag = false;
+        Connection connection = null;
+        try{
+            connection = BaseDao.getConnection();
+            if(userDao.updatePwd(connection,id,pwd) > 0) {
+                flag = true;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            BaseDao.closeResult(connection, null, null);
+        }
+        return flag;
+    }
+
     @Test
-    public void test(){
+    public void testLogin(){
         UserServiceImpl userService = new UserServiceImpl();
         User admin = userService.login("admin", "1234567");
         if (admin != null){
@@ -54,4 +72,5 @@ public class UserServiceImpl implements UserService{
         }
 //        System.out.println(admin.getUserPassword());
     }
+
 }
