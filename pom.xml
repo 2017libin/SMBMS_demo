@@ -58,6 +58,18 @@
       <version>1.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>javax.servlet.jsp.jstl</groupId>
+      <artifactId>jstl-api</artifactId>
+      <version>1.2-rev-1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>jstl-impl</artifactId>
+      <version>1.2</version>
+
+    </dependency>
     <!-- https://mvnrepository.com/artifact/taglibs/standard -->
     <dependency>
       <groupId>taglibs</groupId>
@@ -69,14 +81,9 @@
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
-      <version>1.2.76</version>
+      <version>2.0.32</version>
     </dependency>
-<!--过时组件，导入会抛出异常-->
-<!--    <dependency>-->
-<!--      <groupId>mysql</groupId>-->
-<!--      <artifactId>mysql-connector-java</artifactId>-->
-<!--      <version>5.1.47</version>-->
-<!--    </dependency>-->
+
   </dependencies>
 
   <build>
