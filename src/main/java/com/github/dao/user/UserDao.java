@@ -17,10 +17,10 @@ public interface UserDao {
     // 修改当前用户密码
     public int updatePwd(Connection connection, int id, String pwd)throws SQLException, Exception;
 
-    // 查询用户总数
+    // 根据UserName和UserRole返回满足条件的用户数量
     public int getUserCount(Connection connection, String userName, int userRole)throws Exception;
 
-    // 通过条件查询-userList
+    // 根据UserName和UserRole筛选用户列表，并计算和返回第currentPageNo页的用户列表
     public List<User> getUserList(Connection connection, String userName, int userRole, int currentPageNo, int pageSize)throws Exception;
 
 //    // 增加用户信息

@@ -7,6 +7,7 @@ import com.github.pojo.User;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class UserServiceImpl implements UserService{
     // 业务层都会调用dao层，所以需要引入Dao层
@@ -61,6 +62,44 @@ public class UserServiceImpl implements UserService{
         return flag;
     }
 
+    @Override
+    public int getUserCount(String queryUserName, int queryUserRole) {
+        int count = 0;
+        Connection connection = null;
+
+        System.out.println("queryUserName----->" + queryUserName);
+        System.out.println("queryUserRole----->" + queryUserRole);
+
+        try {
+            connection = BaseDao.getConnection();
+            count = userDao.getUserCount(connection,queryUserName,queryUserRole);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            BaseDao.closeResult(connection,null,null);
+        }
+
+        return count;
+    }
+
+    @Override
+    public List<User> getUserList(String queryUserName, int queryUserRole, int currentPageNo, int pageSize) {
+        Connection connection = null;
+        List<User> userList = null;
+        System.out.println("queryUserName ---- > " + queryUserName);
+        System.out.println("queryUserRole ---- > " + queryUserRole);
+        System.out.println("currentPageNo ---- > " + currentPageNo);
+        System.out.println("pageSize ---- > " + pageSize);
+        try {
+            connection = BaseDao.getConnection();
+            userList = userDao.getUserList(connection, queryUserName,queryUserRole,currentPageNo,pageSize);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            BaseDao.closeResult(connection, null, null);
+        }
+        return userList;
+    }
     @Test
     public void testLogin(){
         UserServiceImpl userService = new UserServiceImpl();
