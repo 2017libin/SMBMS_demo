@@ -9,6 +9,7 @@ import com.github.service.user.UserService;
 import com.github.service.user.UserServiceImpl;
 import com.github.util.Constants;
 import com.github.util.PageSupport;
+import com.mysql.cj.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,13 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class UserServlet extends HttpServlet {
 
-    private void callMethod(String method, HttpServletRequest request, HttpServletResponse response){
+    private void callMethod(String method, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (method != null) {
             if (method.equals("savepwd")) {
                 this.updatePwd(request, response);
@@ -31,19 +35,19 @@ public class UserServlet extends HttpServlet {
             } else if (method.equals("query")) {
                 this.query(request, response);
             } else if (method.equals("add")) {
-//                this.add(request, response);
+                this.add(request, response);
             } else if (method.equals("getrolelist")) {
-//                this.getRoleList(request, response);
+                this.getRoleList(request, response);
             } else if (method.equals("ucexist")) {
-//                this.userCodeExist(request, response);
+                this.userCodeExist(request, response);
             } else if (method.equals("deluser")) {
-//                this.delUser(request, response);
+                this.delUser(request, response);
             } else if (method.equals("view")) {
-//                this.getUserById(request, response,"userview.jsp");
+                this.getUserById(request, response,"userview.jsp");
             } else if (method.equals("modify")) {
-//                this.getUserById(request, response,"usermodify.jsp");
+                this.getUserById(request, response,"usermodify.jsp");
             } else if (method.equals("modifyexe")) {
-//                this.modify(request, response);
+                this.modify(request, response);
             }
         }
     }
@@ -193,5 +197,169 @@ public class UserServlet extends HttpServlet {
         request.setAttribute("totalCount", totalCount);
         request.setAttribute("currentPageNo", currentPageNo);
         request.getRequestDispatcher("userlist.jsp").forward(request, response);
+    }
+
+
+    // 增加用户
+    public void add(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        System.out.println("add()================");
+        String userCode = request.getParameter("userCode");
+        String userName = request.getParameter("userName");
+        String userPassword = request.getParameter("userPassword");
+        String gender = request.getParameter("gender");
+        String birthday = request.getParameter("birthday");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String userRole = request.getParameter("userRole");
+
+        User user = new User();
+        user.setUserCode(userCode);
+        user.setUserName(userName);
+        user.setUserPassword(userPassword);
+        user.setAddress(address);
+        try {
+            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(birthday));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        user.setGender(Integer.valueOf(gender));
+        user.setPhone(phone);
+        user.setUserRole(Integer.valueOf(userRole));
+        user.setCreationDate(new Date());
+        user.setCreatedBy(((User)request.getSession().getAttribute(Constants.USER_SESSION)).getId());
+
+        UserService userService = new UserServiceImpl();
+        if(userService.add(user)){
+            response.sendRedirect(request.getContextPath()+"/jsp/user.do?method=query");
+        }else{
+            request.getRequestDispatcher("useradd.jsp").forward(request, response);
+        }
+
+    }
+
+    // 删除用户
+    public void delUser(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String id = request.getParameter("uid");
+        Integer delId = 0;
+        try{
+            delId = Integer.parseInt(id);
+        }catch (Exception e) {
+            delId = 0;
+        }
+        HashMap<String, String> resultMap = new HashMap<String, String>();
+        if(delId <= 0){
+            resultMap.put("delResult", "notexist");
+        }else{
+            UserService userService = new UserServiceImpl();
+            if(userService.deleteUserById(delId)){
+                resultMap.put("delResult", "true");
+            }else{
+                resultMap.put("delResult", "false");
+            }
+        }
+
+        // 把resultMap转换成json对象输出
+        response.setContentType("application/json");
+        PrintWriter outPrintWriter = response.getWriter();
+        outPrintWriter.write(JSONArray.toJSONString(resultMap));
+        outPrintWriter.flush();
+        outPrintWriter.close();
+    }
+
+    // 修改用户信息
+    public void modify(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String id = request.getParameter("uid");
+        String userName = request.getParameter("userName");
+        String gender = request.getParameter("gender");
+        String birthday = request.getParameter("birthday");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String userRole = request.getParameter("userRole");
+
+        User user = new User();
+        user.setId(Integer.valueOf(id));
+        user.setUserName(userName);
+        user.setGender(Integer.valueOf(gender));
+        try {
+            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(birthday));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        user.setPhone(phone);
+        user.setAddress(address);
+        user.setUserRole(Integer.valueOf(userRole));
+        user.setModifyBy(((User)request.getSession().getAttribute(Constants.USER_SESSION)).getId());
+        user.setModifyDate(new Date());
+
+        UserService userService = new UserServiceImpl();
+        if(userService.modify(user)){
+            response.sendRedirect(request.getContextPath()+"/jsp/user.do?method=query");
+        }else{
+            request.getRequestDispatcher("usermodify.jsp").forward(request, response);
+        }
+
+    }
+
+    // 通过userId查询user
+    public void getUserById(HttpServletRequest request, HttpServletResponse response,String url)
+            throws ServletException, IOException {
+
+        String id = request.getParameter("uid");
+        if(!StringUtils.isNullOrEmpty(id)){
+            // 调用后台方法得到user对象
+            UserService userService = new UserServiceImpl();
+            User user = userService.getUserById(id);
+            request.setAttribute("user", user);
+            request.getRequestDispatcher(url).forward(request, response);
+        }
+
+    }
+
+    // 根据userCode查询出User
+    private void userCodeExist(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // 判断用户账号是否可用
+        String userCode = request.getParameter("userCode");
+
+        HashMap<String, String> resultMap = new HashMap<String, String>();
+        if(StringUtils.isNullOrEmpty(userCode)){
+            // userCode == null || userCode.equals("")
+            resultMap.put("userCode", "exist");
+        }else{
+            UserService userService = new UserServiceImpl();
+            User user = userService.selectUserCodeExist(userCode);
+            if(null != user){
+                resultMap.put("userCode","exist");
+            }else{
+                resultMap.put("userCode", "notexist");
+            }
+        }
+
+        // 把resultMap转为json字符串以json的形式输出
+        // 配置上下文的输出类型
+        response.setContentType("application/json");
+        // 从response对象中获取往外输出的writer对象
+        PrintWriter outPrintWriter = response.getWriter();
+        // 把resultMap转为json字符串 输出
+        outPrintWriter.write(JSONArray.toJSONString(resultMap));
+        outPrintWriter.flush(); // 刷新
+        outPrintWriter.close(); // 关闭流
+    }
+
+    private void getRoleList(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Role> roleList = null;
+        RoleService roleService = new RoleServiceImpl();
+        roleList = roleService.getRoleList();
+        // 把roleList转换成json对象输出
+        response.setContentType("application/json");
+        PrintWriter outPrintWriter = response.getWriter();
+        outPrintWriter.write(JSONArray.toJSONString(roleList));
+        outPrintWriter.flush();
+        outPrintWriter.close();
     }
 }
