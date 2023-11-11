@@ -23,9 +23,9 @@ public interface UserDao {
     // 根据UserName和UserRole筛选用户列表，并计算和返回第currentPageNo页的用户列表
     public List<User> getUserList(Connection connection, String userName, int userRole, int currentPageNo, int pageSize)throws Exception;
 
-//    // 增加用户信息
-//    public int add(Connection connection, User user)throws Exception;
-//
+    // 增加用户信息
+    public int add(Connection connection, User user)throws Exception;
+
 //    // 通过userId删除user
 //    public int deleteUserById(Connection connection, Integer delId)throws Exception;
 //
