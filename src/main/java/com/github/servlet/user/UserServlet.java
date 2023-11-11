@@ -21,18 +21,38 @@ import java.util.List;
 import java.util.Map;
 
 public class UserServlet extends HttpServlet {
+
+    private void callMethod(String method, HttpServletRequest request, HttpServletResponse response){
+        if (method != null) {
+            if (method.equals("savepwd")) {
+                this.updatePwd(request, response);
+            } else if (method.equals("pwdmodify")) {
+                this.pwdModify(request, response);
+            } else if (method.equals("query")) {
+                this.query(request, response);
+            } else if (method.equals("add")) {
+//                this.add(request, response);
+            } else if (method.equals("getrolelist")) {
+//                this.getRoleList(request, response);
+            } else if (method.equals("ucexist")) {
+//                this.userCodeExist(request, response);
+            } else if (method.equals("deluser")) {
+//                this.delUser(request, response);
+            } else if (method.equals("view")) {
+//                this.getUserById(request, response,"userview.jsp");
+            } else if (method.equals("modify")) {
+//                this.getUserById(request, response,"usermodify.jsp");
+            } else if (method.equals("modifyexe")) {
+//                this.modify(request, response);
+            }
+        }
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String method = request.getParameter("method");
         System.out.println("GET: method----> " + method);
 
-        if(method != null && method.equals("savepwd")){
-            this.updatePwd(request, response);
-        } else if(method.equals("pwdmodify") && method!=null){
-            this.pwdModify(request,response);
-        } else if(method != null && method.equals("query")) {
-            this.query(request,response);
-        }
+        this.callMethod(method, request, response);
     }
 
     @Override
@@ -40,15 +60,7 @@ public class UserServlet extends HttpServlet {
         String method = request.getParameter("method");
         System.out.println("POST: method----> " + method);
 
-        if (method!=null){
-            if(method.equals("savepwd")){  // 修改密码
-                this.updatePwd(request, response);
-            } else if(method.equals("pwdmodify")){  // 验证旧密码是否正确
-                this.pwdModify(request,response);
-            } else if(method != null && method.equals("query")) {
-                this.query(request,response);
-            }
-        }
+        this.callMethod(method, request, response);
     }
 
     // 修改密码
@@ -57,21 +69,21 @@ public class UserServlet extends HttpServlet {
         Object o = request.getSession().getAttribute(Constants.USER_SESSION);
         String newpassword = request.getParameter("newpassword");
 
-        System.out.println("UserServlet3:"+newpassword);
+        System.out.println("UserServlet3:" + newpassword);
 
         boolean flag = false;
 
-        if(o != null && (newpassword != null && !newpassword.isEmpty())){
+        if (o != null && (newpassword != null && !newpassword.isEmpty())) {
             UserService userService = new UserServiceImpl();
-            flag = userService.updatePwd(((User)o).getId(),newpassword);
-            if(flag){
+            flag = userService.updatePwd(((User) o).getId(), newpassword);
+            if (flag) {
                 request.setAttribute(Constants.SYS_MESSAGE, "修改密码成功,请退出并使用新密码重新登录！");
                 // 密码修改成功，session注销
                 request.getSession().removeAttribute(Constants.USER_SESSION);
-            }else{
+            } else {
                 request.setAttribute(Constants.SYS_MESSAGE, "修改密码失败！");
             }
-        }else{
+        } else {
             request.setAttribute(Constants.SYS_MESSAGE, "修改密码失败！");
         }
         request.getRequestDispatcher("pwdmodify.jsp").forward(request, response);
@@ -86,16 +98,16 @@ public class UserServlet extends HttpServlet {
         Map<String, String> resultMap = new HashMap<String, String>();
 
         // session过期
-        if(null == o ){
+        if (null == o) {
             resultMap.put("result", "sessionerror");
-        }else if(oldpassword == null || oldpassword.isEmpty()){
+        } else if (oldpassword == null || oldpassword.isEmpty()) {
             // 旧密码输入为空
             resultMap.put("result", "error");
-        }else{
-            String sessionPwd = ((User)o).getUserPassword();
-            if(oldpassword.equals(sessionPwd)){
+        } else {
+            String sessionPwd = ((User) o).getUserPassword();
+            if (oldpassword.equals(sessionPwd)) {
                 resultMap.put("result", "true");
-            }else{
+            } else {
                 // 旧密码输入不正确
                 resultMap.put("result", "false");
             }
@@ -132,26 +144,26 @@ public class UserServlet extends HttpServlet {
          * http://localhost:8090/SMBMS/userlist.do?queryname=
          * --queryUserName ---""
          */
-        System.out.println("queryUserName servlet-------->"+queryUserName);
-        System.out.println("queryUserRole servlet-------->"+queryUserRole);
+        System.out.println("queryUserName servlet-------->" + queryUserName);
+        System.out.println("queryUserRole servlet-------->" + queryUserRole);
         System.out.println("query pageIndex----------> " + pageIndex);
 
-        if(queryUserName == null){
+        if (queryUserName == null) {
             queryUserName = "";
         }
-        if(temp != null && !temp.equals("")){
+        if (temp != null && !temp.equals("")) {
             queryUserRole = Integer.parseInt(temp);
         }
 
-        if(pageIndex != null){
-            try{
+        if (pageIndex != null) {
+            try {
                 currentPageNo = Integer.parseInt(pageIndex);
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 response.sendRedirect("error.jsp");
             }
         }
         // 满足条件的数据数量
-        int totalCount	= userService.getUserCount(queryUserName, queryUserRole);
+        int totalCount = userService.getUserCount(queryUserName, queryUserRole);
 
         // 总页数
         PageSupport pages = new PageSupport();
@@ -162,14 +174,14 @@ public class UserServlet extends HttpServlet {
         int totalPageCount = pages.getTotalPageCount();
 
         // 控制首页和尾页
-        if(currentPageNo < 1){
+        if (currentPageNo < 1) {
             currentPageNo = 1;
-        }else if(currentPageNo > totalPageCount){
+        } else if (currentPageNo > totalPageCount) {
             currentPageNo = totalPageCount;
         }
 
 
-        userList = userService.getUserList(queryUserName,queryUserRole,currentPageNo, pageSize);
+        userList = userService.getUserList(queryUserName, queryUserRole, currentPageNo, pageSize);
         request.setAttribute("userList", userList);
         List<Role> roleList = null;
         RoleService roleService = new RoleServiceImpl();
