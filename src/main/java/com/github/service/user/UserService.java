@@ -22,19 +22,19 @@ public interface UserService {
     // 根据条件查询用户列表
     public List<User> getUserList(String queryUserName, int queryUserRole, int currentPageNo, int pageSize);
 
-//    // 增加用户信息
-//    public boolean add(User user);
-//
-//    // 通过userId删除user
-//    public boolean deleteUserById(Integer delId);
-//
-//    // 修改用户信息
-//    public boolean modify(User user);
-//
-//    // 通过userId查询user
-//    public User getUserById(String id);
-//
-//    // 根据userCode查询出User
-//    public User selectUserCodeExist(String userCode);
+    // 增加用户信息
+    public boolean add(User user);
+
+    // 通过userId删除user
+    public boolean deleteUserById(Integer delId);
+
+    // 修改用户信息
+    public boolean modify(User user);
+
+    // 通过userId查询user
+    public User getUserById(String id);
+
+    // 根据userCode查询出User
+    public User selectUserCodeExist(String userCode);
 
 }

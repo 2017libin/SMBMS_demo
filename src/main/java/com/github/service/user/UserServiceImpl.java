@@ -7,6 +7,7 @@ import com.github.pojo.User;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService{
@@ -112,4 +113,100 @@ public class UserServiceImpl implements UserService{
 //        System.out.println(admin.getUserPassword());
     }
 
+    // 增加用户信息
+    public boolean add(User user) {
+        boolean flag = false;
+        Connection connection = null;
+        try {
+            connection = BaseDao.getConnection();
+            // 开启JDBC事务管理
+            connection.setAutoCommit(false);
+            int updateRows = userDao.add(connection,user);
+            connection.commit();
+            if(updateRows > 0){
+                flag = true;
+                System.out.println("add success!");
+            }else{
+                System.out.println("add failed!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                System.out.println("rollback==================");
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }finally{
+            // 在service层进行connection连接的关闭
+            BaseDao.closeResult(connection, null, null);
+        }
+        return flag;
+    }
+
+    // 通过userId删除user
+    public boolean deleteUserById(Integer delId) {
+        Connection connection = null;
+        boolean flag = false;
+        try {
+            connection = BaseDao.getConnection();
+            if(userDao.deleteUserById(connection,delId) > 0) {
+                flag = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            BaseDao.closeResult(connection, null, null);
+        }
+        return flag;
+    }
+
+    // 修改用户信息
+    public boolean modify(User user) {
+        Connection connection = null;
+        boolean flag = false;
+        try {
+            connection = BaseDao.getConnection();
+            if(userDao.modify(connection,user) > 0) {
+                flag = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            BaseDao.closeResult(connection, null, null);
+        }
+        return flag;
+    }
+
+    // 通过userId查询user
+    public User getUserById(String id) {
+        User user = null;
+        Connection connection = null;
+        try{
+            connection = BaseDao.getConnection();
+            user = userDao.getUserById(connection,id);
+        }catch (Exception e) {
+            e.printStackTrace();
+            user = null;
+        }finally{
+            BaseDao.closeResult(connection, null, null);
+        }
+        return user;
+    }
+
+    // 根据userCode查询出User
+    public User selectUserCodeExist(String userCode) {
+        Connection connection = null;
+        User user = null;
+        try {
+            connection = BaseDao.getConnection();
+            user = userDao.getLoginUser(connection, userCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            BaseDao.closeResult(connection, null, null);
+        }
+        return user;
+    }
 }
