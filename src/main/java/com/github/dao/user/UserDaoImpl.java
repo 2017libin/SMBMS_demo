@@ -16,6 +16,8 @@ import java.util.List;
  * @Date 2023/10/30
  */
 public class UserDaoImpl implements UserDao {
+
+    //
     public User getLoginUser(Connection connection, String userCode) throws Exception{
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -24,6 +26,7 @@ public class UserDaoImpl implements UserDao {
             String sql = "select * from smbms_user where userCode=?";
             Object[] params = {userCode};
             resultSet = BaseDao.execute(connection, preparedStatement, resultSet, sql, params);
+            // 获取匹配成功的第一条记录
             if(resultSet.next()) {
                 user = new User();
                 user.setId(resultSet.getInt("id"));
@@ -60,17 +63,16 @@ public class UserDaoImpl implements UserDao {
         return flag;
     }
 
-    // 根据用户名或角色查询用户总数
+    // 根据查询用户总数（用户的id属于role.id），可以通过userName、userRole进一步限定范围的用户数量
     public int getUserCount(Connection connection, String userName, int userRole) throws Exception {
-
         PreparedStatement pstm = null;
         ResultSet rs = null;
         int count=0;
 
         if(connection!=null){
             StringBuffer sql = new StringBuffer();
-            // count(1) 统计行数
-            sql.append("select count(1) as count from smbms_user u,smbms_role r where u.userRole = r.id");
+            // count(1) 统计查询结果的行数
+            sql.append("select count(1) as count from smbms_user u,smbms_role r where u.userRole = r.id");  // 返回id属于r.id的用户的user数量
             // 存放参数
             List<Object> list = new ArrayList<Object>();
 
@@ -94,7 +96,7 @@ public class UserDaoImpl implements UserDao {
 
             // 从结果集中获取最后的数量
             if(rs.next()){
-                count = rs.getInt("count");
+                count = rs.getInt("count");  // 获取列名为count的值
             }
 
             BaseDao.closeResult(null,pstm,rs);

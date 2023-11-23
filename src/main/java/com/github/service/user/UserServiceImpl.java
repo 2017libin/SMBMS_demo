@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
         }
 
         // 2. 匹配密码
-        if(null != user){
+        if(user != null){
             if(!user.getUserPassword().equals(userPassword)) {
                 user = null;
             }
@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService{
         return flag;
     }
 
+    // 获取满足条件的user对象数量
     @Override
     public int getUserCount(String queryUserName, int queryUserRole) {
         int count = 0;
@@ -79,10 +80,10 @@ public class UserServiceImpl implements UserService{
         } finally {
             BaseDao.closeResult(connection,null,null);
         }
-
         return count;
     }
 
+    // 获取指定页数的用户信息，参数queryUserName，queryUserRole可选
     @Override
     public List<User> getUserList(String queryUserName, int queryUserRole, int currentPageNo, int pageSize) {
         Connection connection = null;
@@ -100,17 +101,6 @@ public class UserServiceImpl implements UserService{
             BaseDao.closeResult(connection, null, null);
         }
         return userList;
-    }
-    @Test
-    public void testLogin(){
-        UserServiceImpl userService = new UserServiceImpl();
-        User admin = userService.login("admin", "1234567");
-        if (admin != null){
-            System.out.println("login successful!");
-        }else {
-            System.out.println("login failed!");
-        }
-//        System.out.println(admin.getUserPassword());
     }
 
     // 增加用户信息
@@ -208,5 +198,17 @@ public class UserServiceImpl implements UserService{
             BaseDao.closeResult(connection, null, null);
         }
         return user;
+    }
+
+    @Test
+    public void testLogin(){
+        UserServiceImpl userService = new UserServiceImpl();
+        User admin = userService.login("zhaomin", "1234567");
+        if (admin != null){
+            System.out.println("login successful!");
+        }else {
+            System.out.println("login failed!");
+        }
+//        System.out.println(admin.getUserPassword());
     }
 }

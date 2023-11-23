@@ -90,6 +90,8 @@ public class UserServlet extends HttpServlet {
         } else {
             request.setAttribute(Constants.SYS_MESSAGE, "修改密码失败！");
         }
+
+        // 通过调用forward方法，控制权将移交给目标资源(pwdmodify.jsp)，它将负责处理请求和生成响应。
         request.getRequestDispatcher("pwdmodify.jsp").forward(request, response);
     }
 
