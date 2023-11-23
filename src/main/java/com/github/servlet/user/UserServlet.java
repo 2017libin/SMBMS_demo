@@ -318,7 +318,6 @@ public class UserServlet extends HttpServlet {
             request.setAttribute("user", user);
             request.getRequestDispatcher(url).forward(request, response);
         }
-
     }
 
     // 根据userCode查询出User

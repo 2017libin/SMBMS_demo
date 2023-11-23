@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file="/jsp/common/head.jsp"%>
+<meta http- equiv="Content- Type" content=" text/html; charset-utf-8"/>
     <div class="right">
         <div class="location">
             <strong>你现在所在的位置是:</strong>
@@ -49,14 +50,33 @@
 				<div>
                     <label >用户角色：</label>
                     <!-- 列出所有的角色分类 -->
-					<input type="hidden" value="${user.userRole }" id="rid" />
-					<select name="userRole" id="userRole"></select>
-        			<font color="red"></font>
+<%--					<input type="display" value="${user.userRole }" id="rid" />--%>
+<%--					<select name="userRole" id="userRole"></select>--%>
+<%--        			<font color="red"></font>--%>
+                    <select name="userRole" id="userRole">
+                        <c:choose>
+                            <c:when test="${user.userRole == 1 }">
+                                <option value="1" selected="selected">系统管理员</option>
+                                <option value="2">经理</option>
+                                <option value="3">普通员工</option>
+                            </c:when>
+                            <c:when test="${user.userRole == 2 }">
+                                <option value="1">系统管理员</option>
+                                <option value="2" selected="selected">经理</option>
+                                <option value="3">普通员工</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="1">系统管理员</option>
+                                <option value="2">经理</option>
+                                <option value="3" selected="selected">普通员工</option>
+                            </c:otherwise>
+                        </c:choose>
+                    </select>
                 </div>
 			 <div class="providerAddBtn">
-                    <input type="button" name="save" id="save" value="保存" />
+                    <input type="submit" name="save" id="save" value="保存" />
                     <input type="button" id="back" name="back" value="返回"/>
-                </div>
+             </div>
             </form>
         </div>
     </div>
