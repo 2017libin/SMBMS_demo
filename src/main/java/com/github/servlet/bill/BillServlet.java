@@ -212,20 +212,20 @@ public class BillServlet extends HttpServlet {
         String queryProductName = request.getParameter("queryProductName");
         String queryProviderId = request.getParameter("queryProviderId");
         String queryIsPayment = request.getParameter("queryIsPayment");
-        if(queryProductName != null && !queryProductName.isEmpty()){
+        if(queryProductName == null || queryProductName.isEmpty()){
             queryProductName = "";
         }
 
         List<Bill> billList = new ArrayList<Bill>();
         BillService billService = new BillServiceImpl();
         Bill bill = new Bill();
-        if(queryIsPayment != null && !queryIsPayment.isEmpty()){
+        if(queryIsPayment == null || queryIsPayment.isEmpty()){
             bill.setIsPayment(0);
         }else{
             bill.setIsPayment(Integer.parseInt(queryIsPayment));
         }
 
-        if(queryProviderId != null && !queryProviderId.isEmpty()){
+        if(queryProviderId == null || queryProviderId.isEmpty()){
             bill.setProviderId(0);
         }else{
             bill.setProviderId(Integer.parseInt(queryProviderId));
