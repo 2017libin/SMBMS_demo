@@ -2,12 +2,12 @@
 Java web 入门项目
 
 ## 1. **各个层的作用**
-      1. Dao：提供对数据库的操作
-      1. BaseDao：最基础的数据库操作，包括**提供connection**、**执行sql语句**、**关闭connection/preparement/resultSet对象**等
-      2. UserDao：提供对user表的数据库操作
-         1. 其中依赖**BaseDao**来对**user**表进行操作
-      3. RoleDao：提供对role表的数据库操作
-         1. 其中依赖**RoleDao**来对**role**表进行操作
+  1. Dao：提供对数据库的操作
+  1. BaseDao：最基础的数据库操作，包括**提供connection**、**执行sql语句**、**关闭connection/preparement/resultSet对象**等
+  2. UserDao：提供对user表的数据库操作
+     1. 其中依赖**BaseDao**来对**user**表进行操作
+  3. RoleDao：提供对role表的数据库操作
+     1. 其中依赖**RoleDao**来对**role**表进行操作
    2. Service：调用Dao/BaseDao/RoleDao来提供服务
       1. 获取用户列表：通过UserDao查询出ResultSet，并将结果进行返回
          1. 通过BaseDao获取connection对象
